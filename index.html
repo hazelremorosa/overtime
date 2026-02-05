@@ -7,7 +7,10 @@
         <link rel="manifest" href="manifest.json" />
         <meta name="theme-color" content="#6366f1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
         <link rel="apple-touch-icon" href="icon-192.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,6 +19,7 @@
             rel="stylesheet"
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
         <style>
             :root {
                 --accent: #6366f1;
@@ -35,9 +39,11 @@
                 --gray-800: #1f2937;
                 --gray-900: #111827;
                 --radius: 12px;
-                --shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+                --shadow:
+                    0 1px 3px rgba(0, 0, 0, 0.06),
                     0 4px 16px rgba(0, 0, 0, 0.06);
-                --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08),
+                --shadow-lg:
+                    0 4px 12px rgba(0, 0, 0, 0.08),
                     0 16px 40px rgba(0, 0, 0, 0.12);
             }
 
@@ -48,7 +54,11 @@
             }
 
             body {
-                font-family: "Inter", system-ui, -apple-system, sans-serif;
+                font-family:
+                    "Inter",
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
                 background: var(--gray-50);
                 color: var(--gray-800);
                 padding: 32px 16px;
@@ -108,7 +118,8 @@
                 color: var(--gray-600);
                 min-width: 140px;
             }
-            .form-row input {
+            .form-row input,
+            .form-row select {
                 margin-top: 6px;
                 padding: 10px 12px;
                 border: 1.5px solid var(--gray-200);
@@ -117,13 +128,22 @@
                 font-family: inherit;
                 color: var(--gray-800);
                 background: var(--gray-50);
-                transition: border-color 0.2s, box-shadow 0.2s;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
             }
-            .form-row input:focus {
+            .form-row input:focus,
+            .form-row select:focus {
                 outline: none;
                 border-color: var(--accent);
                 box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
                 background: #fff;
+            }
+            .form-row .custom-name-input {
+                display: none;
+            }
+            .form-row .custom-name-input.visible {
+                display: block;
             }
 
             /* ---- Buttons ---- */
@@ -137,7 +157,10 @@
                 font-family: inherit;
                 color: #fff;
                 background: var(--accent);
-                transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+                transition:
+                    background 0.2s,
+                    transform 0.1s,
+                    box-shadow 0.2s;
             }
             button:hover {
                 background: var(--accent-hover);
@@ -212,7 +235,9 @@
                 width: 100%;
                 color: var(--gray-800);
                 background: var(--gray-50);
-                transition: border-color 0.2s, box-shadow 0.2s;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
             }
             .entry-table input[type="time"]:focus,
             .entry-table input[type="text"]:focus {
@@ -236,7 +261,9 @@
                 font-size: 18px;
                 font-weight: 400;
                 line-height: 1;
-                transition: color 0.2s, background 0.2s;
+                transition:
+                    color 0.2s,
+                    background 0.2s;
                 box-shadow: none;
             }
             .entry-table .btn-remove:hover {
@@ -314,12 +341,22 @@
             }
 
             @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
             }
             @keyframes slideUp {
-                from { opacity: 0; transform: translateY(16px) scale(0.97); }
-                to { opacity: 1; transform: translateY(0) scale(1); }
+                from {
+                    opacity: 0;
+                    transform: translateY(16px) scale(0.97);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
             }
 
             /* ---- Render target (off-screen, unchanged) ---- */
@@ -388,7 +425,10 @@
         <!-- Header -->
         <div class="app-header">
             <h1>Overtime Record Generator</h1>
-            <p>Fill in details, adjust your entries, then generate a downloadable image.</p>
+            <p>
+                Fill in details, adjust your entries, then generate a
+                downloadable image.
+            </p>
         </div>
 
         <!-- Controls -->
@@ -396,11 +436,25 @@
             <div class="card-title">Employee Details</div>
             <div class="form-row">
                 <label
-                    >Employee Name<input
+                    >Employee Name
+                    <select id="empNameSelect">
+                        <option value="">-- Select Employee --</option>
+                        <option value="Marvin Canezo">Marvin Canezo</option>
+                        <option value="Danica Santa Isabel">
+                            Danica Santa Isabel
+                        </option>
+                        <option value="Alden Betito">Alden Betito</option>
+                        <option value="__custom__">
+                            Other (Enter manually)
+                        </option>
+                    </select>
+                    <input
                         type="text"
-                        id="empName"
-                        placeholder="John Doe"
-                /></label>
+                        id="empNameCustom"
+                        class="custom-name-input"
+                        placeholder="Enter employee name"
+                    />
+                </label>
                 <label
                     >Position<input
                         type="text"
@@ -454,7 +508,8 @@
                 <img id="previewImg" src="" alt="Preview" />
                 <div class="modal-buttons">
                     <button class="cancel" id="btnCancel">Cancel</button>
-                    <button class="green" id="btnDownload">Download</button>
+                    <button class="green" id="btnDownloadImg">Download as Image</button>
+                    <button id="btnDownloadPdf">Download as PDF (A4)</button>
                 </div>
             </div>
         </div>
@@ -464,6 +519,37 @@
 
         <script>
             const OT_START_HOUR = 17; // 5:00 PM
+
+            const employeeData = {
+                "Marvin Canezo": "Draftsman",
+                "Danica Santa Isabel": "Architect",
+                "Alden Betito": "Project Engineer",
+            };
+
+            const empNameSelect = document.getElementById("empNameSelect");
+            const empNameCustom = document.getElementById("empNameCustom");
+            const empPosition = document.getElementById("empPosition");
+
+            empNameSelect.addEventListener("change", () => {
+                const val = empNameSelect.value;
+                if (val === "__custom__") {
+                    empNameCustom.classList.add("visible");
+                    empNameCustom.value = "";
+                    empPosition.value = "";
+                    empNameCustom.focus();
+                } else {
+                    empNameCustom.classList.remove("visible");
+                    empNameCustom.value = "";
+                    empPosition.value = employeeData[val] || "";
+                }
+            });
+
+            function getEmployeeName() {
+                if (empNameSelect.value === "__custom__") {
+                    return empNameCustom.value;
+                }
+                return empNameSelect.value;
+            }
 
             document
                 .getElementById("btnGenRows")
@@ -569,8 +655,7 @@
             }
 
             function generateImage() {
-                const name =
-                    document.getElementById("empName").value || "EMPLOYEE NAME";
+                const name = getEmployeeName() || "EMPLOYEE NAME";
                 const position =
                     document.getElementById("empPosition").value || "Position";
 
@@ -626,11 +711,42 @@
                         .getElementById("previewModal")
                         .classList.add("open");
 
-                    document.getElementById("btnDownload").onclick = () => {
+                    // Download as Image
+                    document.getElementById("btnDownloadImg").onclick = () => {
                         const link = document.createElement("a");
                         link.download = "overtime-record.png";
                         link.href = dataUrl;
                         link.click();
+                        document
+                            .getElementById("previewModal")
+                            .classList.remove("open");
+                    };
+
+                    // Download as PDF (A4)
+                    document.getElementById("btnDownloadPdf").onclick = () => {
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF("p", "mm", "a4");
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                        const margin = 20;
+                        const usableWidth = pageWidth - margin * 2;
+
+                        const imgWidth = canvas.width;
+                        const imgHeight = canvas.height;
+                        const ratio = usableWidth / imgWidth;
+                        const pdfImgHeight = imgHeight * ratio;
+
+                        const yOffset = margin;
+
+                        pdf.addImage(
+                            dataUrl,
+                            "PNG",
+                            margin,
+                            yOffset,
+                            usableWidth,
+                            pdfImgHeight,
+                        );
+                        pdf.save("overtime-record.pdf");
                         document
                             .getElementById("previewModal")
                             .classList.remove("open");
