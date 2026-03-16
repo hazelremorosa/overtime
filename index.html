@@ -225,7 +225,6 @@
             .entry-table tbody tr:hover {
                 background: rgba(99, 102, 241, 0.03);
             }
-            .entry-table input[type="time"],
             .entry-table input[type="text"] {
                 border: 1.5px solid var(--gray-200);
                 border-radius: 6px;
@@ -239,12 +238,41 @@
                     border-color 0.2s,
                     box-shadow 0.2s;
             }
-            .entry-table input[type="time"]:focus,
             .entry-table input[type="text"]:focus {
                 outline: none;
                 border-color: var(--accent);
                 box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
                 background: #fff;
+            }
+            .time-picker {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+            }
+            .time-picker select {
+                border: 1.5px solid var(--gray-200);
+                border-radius: 6px;
+                padding: 7px 4px;
+                font-size: 13px;
+                font-family: inherit;
+                color: var(--gray-800);
+                background: var(--gray-50);
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
+                -webkit-appearance: none;
+                appearance: none;
+                text-align: center;
+            }
+            .time-picker select:focus {
+                outline: none;
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+                background: #fff;
+            }
+            .time-picker .time-sep {
+                font-weight: 600;
+                color: var(--gray-500);
             }
             .entry-table .hours-cell {
                 font-weight: 600;
@@ -419,6 +447,163 @@
             #render-target .footer .name {
                 font-weight: 700;
             }
+            /* ---- History ---- */
+            .history-list {
+                list-style: none;
+                margin-top: 12px;
+            }
+            .history-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 12px;
+                border: 1px solid var(--gray-200);
+                border-radius: 8px;
+                margin-bottom: 8px;
+                background: var(--gray-50);
+                transition: background 0.15s;
+            }
+            .history-item:hover {
+                background: #fff;
+            }
+            .history-item-info {
+                flex: 1;
+                min-width: 0;
+            }
+            .history-item-name {
+                font-weight: 600;
+                font-size: 14px;
+                color: var(--gray-800);
+            }
+            .history-item-meta {
+                font-size: 12px;
+                color: var(--gray-500);
+                margin-top: 2px;
+            }
+            .history-item-actions {
+                display: flex;
+                gap: 6px;
+                flex-shrink: 0;
+                margin-left: 12px;
+            }
+            .history-item-actions button {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .history-empty {
+                font-size: 13px;
+                color: var(--gray-400);
+                text-align: center;
+                padding: 16px 0;
+            }
+
+            /* ---- Toast ---- */
+            .toast {
+                position: fixed;
+                top: 24px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                background: var(--gray-900);
+                color: #fff;
+                padding: 12px 24px;
+                border-radius: 10px;
+                font-size: 14px;
+                font-weight: 500;
+                font-family: inherit;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.25s, transform 0.25s;
+                z-index: 9999;
+            }
+            .toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                pointer-events: auto;
+            }
+            .toast.toast-error {
+                background: var(--red);
+            }
+            .toast.toast-success {
+                background: var(--green);
+            }
+
+            /* ---- Confirm dialog ---- */
+            .confirm-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.35);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9998;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s;
+            }
+            .confirm-overlay.open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .confirm-box {
+                background: #fff;
+                border-radius: var(--radius);
+                padding: 28px 24px 20px;
+                max-width: 360px;
+                width: 90%;
+                box-shadow: var(--shadow-lg);
+                text-align: center;
+            }
+            .confirm-box p {
+                font-size: 15px;
+                color: var(--gray-800);
+                margin-bottom: 20px;
+                line-height: 1.5;
+            }
+            .confirm-box .confirm-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
+            .confirm-box .confirm-actions button {
+                min-width: 100px;
+            }
+
+            @media (max-width: 480px) {
+                .history-item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }
+                .history-item-actions {
+                    margin-left: 0;
+                    width: 100%;
+                }
+                .history-item-actions button {
+                    flex: 1;
+                }
+                .form-row:not(.form-row-inline) {
+                    flex-direction: column;
+                }
+                #btnGenRows {
+                    width: 100%;
+                }
+                .modal-buttons {
+                    flex-direction: column;
+                }
+                .modal-buttons button {
+                    min-width: unset;
+                    width: 100%;
+                }
+                .entry-table.card {
+                    padding: 12px 8px;
+                    overflow-x: auto;
+                }
+                .entry-table td,
+                .entry-table thead th {
+                    padding: 6px 4px;
+                }
+            }
         </style>
     </head>
     <body>
@@ -463,11 +648,36 @@
                 /></label>
             </div>
             <div class="card-title" style="margin-top: 20px">Date Range</div>
-            <div class="form-row">
+            <div class="form-row form-row-inline">
                 <label>Start Date<input type="date" id="startDate" /></label>
                 <label>End Date<input type="date" id="endDate" /></label>
             </div>
+            <div class="form-row" style="margin-top: 8px">
+                <label
+                    >Time Out
+                    <div class="time-picker">
+                        <select id="toHour"></select>
+                        <span class="time-sep">:</span>
+                        <select id="toMinute"></select>
+                        <select id="toAmpm"></select>
+                    </div>
+                </label>
+            </div>
             <div style="margin-top: 8px">
+                <label
+                    style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 6px;
+                        font-size: 13px;
+                        cursor: pointer;
+                    "
+                >
+                    <input type="checkbox" id="excludeSundays" /> Exclude
+                    Sundays
+                </label>
+            </div>
+            <div style="margin-top: 8px; text-align: center">
                 <button id="btnGenRows">Generate Rows</button>
             </div>
         </div>
@@ -494,11 +704,31 @@
                     </tr>
                 </tfoot>
             </table>
+            <div class="actions" id="actionsSection" style="margin-top: 16px">
+                <button class="cancel" id="btnReset">Reset</button>
+                <button id="btnSaveDraft">Save Draft</button>
+                <button class="green" id="btnGenImage">Generate Image</button>
+            </div>
         </div>
 
-        <!-- Action buttons -->
-        <div class="actions" id="actionsSection">
-            <button class="green" id="btnGenImage">Generate Image</button>
+        <!-- History -->
+        <div class="card" id="historySection" style="display: none">
+            <div class="card-title">History</div>
+            <ul class="history-list" id="historyList"></ul>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+
+        <!-- Confirm dialog -->
+        <div class="confirm-overlay" id="confirmOverlay">
+            <div class="confirm-box">
+                <p id="confirmMsg"></p>
+                <div class="confirm-actions">
+                    <button class="cancel" id="confirmNo">Cancel</button>
+                    <button id="confirmYes">Confirm</button>
+                </div>
+            </div>
         </div>
 
         <!-- Preview modal -->
@@ -507,9 +737,11 @@
                 <h2>Preview</h2>
                 <img id="previewImg" src="" alt="Preview" />
                 <div class="modal-buttons">
-                    <button class="cancel" id="btnCancel">Cancel</button>
-                    <button class="green" id="btnDownloadImg">Download as Image</button>
+                    <button class="green" id="btnDownloadImg">
+                        Download as Image
+                    </button>
                     <button id="btnDownloadPdf">Download as PDF (A4)</button>
+                    <button class="cancel" id="btnCancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -518,7 +750,50 @@
         <div id="render-target"></div>
 
         <script>
-            const OT_START_HOUR = 17; // 5:00 PM
+            let toastTimer;
+            function showToast(msg, type) {
+                const t = document.getElementById('toast');
+                t.textContent = msg;
+                t.className = 'toast' + (type ? ' toast-' + type : '');
+                clearTimeout(toastTimer);
+                requestAnimationFrame(() => {
+                    t.classList.add('show');
+                    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+                });
+            }
+
+            function showConfirm(msg) {
+                return new Promise((resolve) => {
+                    const overlay = document.getElementById('confirmOverlay');
+                    document.getElementById('confirmMsg').textContent = msg;
+                    overlay.classList.add('open');
+                    const yes = document.getElementById('confirmYes');
+                    const no = document.getElementById('confirmNo');
+                    function cleanup(result) {
+                        overlay.classList.remove('open');
+                        yes.removeEventListener('click', onYes);
+                        no.removeEventListener('click', onNo);
+                        overlay.removeEventListener('click', onBg);
+                        resolve(result);
+                    }
+                    function onYes() { cleanup(true); }
+                    function onNo() { cleanup(false); }
+                    function onBg(e) { if (e.target === overlay) cleanup(false); }
+                    yes.addEventListener('click', onYes);
+                    no.addEventListener('click', onNo);
+                    overlay.addEventListener('click', onBg);
+                });
+            }
+
+            function getOTStart() {
+                const h = parseInt(document.getElementById("toHour").value);
+                const m = parseInt(document.getElementById("toMinute").value);
+                const ap = document.getElementById("toAmpm").value;
+                let h24 = h;
+                if (ap === "AM" && h === 12) h24 = 0;
+                else if (ap === "PM" && h !== 12) h24 = h + 12;
+                return { h: h24, m };
+            }
 
             const employeeData = {
                 "Marvin Canezo": "Draftsman",
@@ -542,7 +817,19 @@
                     empNameCustom.value = "";
                     empPosition.value = employeeData[val] || "";
                 }
+                saveDraft();
             });
+            empNameCustom.addEventListener("input", saveDraft);
+            empPosition.addEventListener("input", saveDraft);
+            document
+                .getElementById("startDate")
+                .addEventListener("change", saveDraft);
+            document
+                .getElementById("endDate")
+                .addEventListener("change", saveDraft);
+            document
+                .getElementById("excludeSundays")
+                .addEventListener("change", saveDraft);
 
             function getEmployeeName() {
                 if (empNameSelect.value === "__custom__") {
@@ -557,74 +844,245 @@
             document
                 .getElementById("btnGenImage")
                 .addEventListener("click", generateImage);
+            document
+                .getElementById("btnSaveDraft")
+                .addEventListener("click", () => {
+                    saveDraft();
+                    showToast("Draft saved!", "success");
+                });
+            document
+                .getElementById("btnReset")
+                .addEventListener("click", async () => {
+                    if (!(await showConfirm("Reset all fields and clear saved draft?")))
+                        return;
+                    localStorage.removeItem("overtimeDraft");
+                    empNameSelect.value = "";
+                    empNameCustom.classList.remove("visible");
+                    empNameCustom.value = "";
+                    empPosition.value = "";
+                    document.getElementById("startDate").value = "";
+                    document.getElementById("endDate").value = "";
+                    document.getElementById("excludeSundays").checked = false;
+                    document.getElementById("entryBody").innerHTML = "";
+                    document.getElementById("totalHours").textContent = "0";
+                    document.getElementById("entrySection").style.display =
+                        "none";
+                    document.getElementById("actionsSection").style.display =
+                        "none";
+                });
+
+            function saveDraft() {
+                const draft = {
+                    empName: empNameSelect.value,
+                    empNameCustom: empNameCustom.value,
+                    empPosition: empPosition.value,
+                    startDate: document.getElementById("startDate").value,
+                    endDate: document.getElementById("endDate").value,
+                    excludeSundays:
+                        document.getElementById("excludeSundays").checked,
+                    toHour: document.getElementById("toHour").value,
+                    toMinute: document.getElementById("toMinute").value,
+                    toAmpm: document.getElementById("toAmpm").value,
+                    rows: [],
+                };
+                document.querySelectorAll("#entryBody tr").forEach((tr) => {
+                    draft.rows.push({
+                        date: tr.children[0].textContent,
+                        hour: tr.querySelector(".time-hour").value,
+                        minute: tr.querySelector(".time-minute").value,
+                        ampm: tr.querySelector(".time-ampm").value,
+                        notes: tr.querySelector(".notes-input").value,
+                    });
+                });
+                localStorage.setItem("overtimeDraft", JSON.stringify(draft));
+            }
+
+            function loadDraft() {
+                const raw = localStorage.getItem("overtimeDraft");
+                if (!raw) return;
+                try {
+                    const draft = JSON.parse(raw);
+                    empNameSelect.value = draft.empName || "";
+                    if (draft.empName === "__custom__") {
+                        empNameCustom.classList.add("visible");
+                        empNameCustom.value = draft.empNameCustom || "";
+                    }
+                    empPosition.value = draft.empPosition || "";
+                    document.getElementById("startDate").value =
+                        draft.startDate || "";
+                    document.getElementById("endDate").value =
+                        draft.endDate || "";
+                    document.getElementById("excludeSundays").checked =
+                        !!draft.excludeSundays;
+                    if (draft.toHour)
+                        document.getElementById("toHour").value = draft.toHour;
+                    if (draft.toMinute)
+                        document.getElementById("toMinute").value =
+                            draft.toMinute;
+                    if (draft.toAmpm)
+                        document.getElementById("toAmpm").value = draft.toAmpm;
+
+                    if (draft.rows && draft.rows.length > 0) {
+                        const tbody = document.getElementById("entryBody");
+                        tbody.innerHTML = "";
+                        draft.rows.forEach((r) => {
+                            addRow(tbody, r.date, r);
+                        });
+                        recalcAll();
+                        document.getElementById("entrySection").style.display =
+                            "block";
+                        document.getElementById(
+                            "actionsSection",
+                        ).style.display = "block";
+                    }
+                } catch (e) {}
+            }
+
+            // Populate Time Out selects and set default to 5:00 PM
+            document.getElementById("toHour").innerHTML =
+                buildTimeOptions("hour");
+            document.getElementById("toMinute").innerHTML =
+                buildTimeOptions("minute");
+            document.getElementById("toAmpm").innerHTML =
+                buildTimeOptions("ampm");
+            document.getElementById("toHour").value = "5";
+            document.getElementById("toMinute").value = "0";
+            document.getElementById("toAmpm").value = "PM";
+
+            document.getElementById("toHour").addEventListener("change", () => {
+                recalcAll();
+                saveDraft();
+            });
+            document
+                .getElementById("toMinute")
+                .addEventListener("change", () => {
+                    recalcAll();
+                    saveDraft();
+                });
+            document.getElementById("toAmpm").addEventListener("change", () => {
+                recalcAll();
+                saveDraft();
+            });
+
+            loadDraft();
 
             function generateRows() {
                 const start = document.getElementById("startDate").value;
                 const end = document.getElementById("endDate").value;
                 if (!start || !end) {
-                    alert("Please select both start and end dates.");
+                    showToast("Please select both start and end dates.", "error");
                     return;
                 }
 
                 const startD = new Date(start + "T00:00:00");
                 const endD = new Date(end + "T00:00:00");
                 if (endD < startD) {
-                    alert("End date must be on or after start date.");
+                    showToast("End date must be on or after start date.", "error");
                     return;
                 }
 
                 const tbody = document.getElementById("entryBody");
                 tbody.innerHTML = "";
 
+                const skipSun =
+                    document.getElementById("excludeSundays").checked;
                 const cur = new Date(startD);
                 while (cur <= endD) {
-                    const dateStr = formatDateUS(cur);
-                    addRow(tbody, dateStr);
+                    if (!skipSun || cur.getDay() !== 0) {
+                        const dateStr = formatDateUS(cur);
+                        addRow(tbody, dateStr);
+                    }
                     cur.setDate(cur.getDate() + 1);
                 }
 
                 recalcAll();
+                saveDraft();
 
                 document.getElementById("entrySection").style.display = "block";
                 document.getElementById("actionsSection").style.display =
                     "block";
             }
 
-            function addRow(tbody, dateStr) {
+            function buildTimeOptions(type) {
+                let opts = "";
+                if (type === "hour") {
+                    for (let i = 1; i <= 12; i++)
+                        opts += `<option value="${i}">${i}</option>`;
+                } else if (type === "minute") {
+                    for (let i = 0; i < 60; i++)
+                        opts += `<option value="${i}">${String(i).padStart(2, "0")}</option>`;
+                } else {
+                    opts =
+                        '<option value="AM">AM</option><option value="PM">PM</option>';
+                }
+                return opts;
+            }
+
+            function getEndTime24(tr) {
+                const h = parseInt(tr.querySelector(".time-hour").value);
+                const m = parseInt(tr.querySelector(".time-minute").value);
+                const ap = tr.querySelector(".time-ampm").value;
+                let h24 = h;
+                if (ap === "AM" && h === 12) h24 = 0;
+                else if (ap === "PM" && h !== 12) h24 = h + 12;
+                return { h: h24, m };
+            }
+
+            function addRow(tbody, dateStr, opts) {
+                const o = opts || {
+                    hour: "7",
+                    minute: "0",
+                    ampm: "PM",
+                    notes: "",
+                };
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${dateStr}</td>
-                    <td><input type="time" class="end-time" value="20:00"></td>
+                    <td><div class="time-picker">
+                        <select class="time-hour">${buildTimeOptions("hour")}</select>
+                        <span class="time-sep">:</span>
+                        <select class="time-minute">${buildTimeOptions("minute")}</select>
+                        <select class="time-ampm">${buildTimeOptions("ampm")}</select>
+                    </div></td>
                     <td class="hours-cell"></td>
-                    <td><input type="text" class="notes-input" placeholder=""></td>
+                    <td><input type="text" class="notes-input" placeholder="" value="${escHtml(o.notes || "")}"></td>
                     <td><button class="btn-remove" title="Remove this date">&times;</button></td>
                 `;
-                tr.querySelector(".end-time").addEventListener(
+                tr.querySelector(".time-hour").value = o.hour;
+                tr.querySelector(".time-minute").value = o.minute;
+                tr.querySelector(".time-ampm").value = o.ampm;
+
+                tr.querySelectorAll(
+                    ".time-hour, .time-minute, .time-ampm",
+                ).forEach((sel) =>
+                    sel.addEventListener("change", () => {
+                        recalcAll();
+                        saveDraft();
+                    }),
+                );
+                tr.querySelector(".notes-input").addEventListener(
                     "input",
-                    recalcAll,
+                    saveDraft,
                 );
                 tr.querySelector(".btn-remove").addEventListener(
                     "click",
                     () => {
                         tr.remove();
                         recalcAll();
+                        saveDraft();
                     },
                 );
                 tbody.appendChild(tr);
             }
 
             function recalcAll() {
+                const otStart = getOTStart();
                 let total = 0;
                 document.querySelectorAll("#entryBody tr").forEach((tr) => {
                     const cell = tr.querySelector(".hours-cell");
-                    const timeInput = tr.querySelector(".end-time");
-                    if (!timeInput.value) {
-                        cell.textContent = "";
-                        return;
-                    }
-                    const [h, m] = timeInput.value.split(":").map(Number);
+                    const { h, m } = getEndTime24(tr);
                     const endMin = h * 60 + m;
-                    const startMin = OT_START_HOUR * 60;
+                    const startMin = otStart.h * 60 + otStart.m;
                     let diff = endMin - startMin;
                     if (diff <= 0) {
                         cell.textContent = "";
@@ -632,10 +1090,9 @@
                     }
                     const hours = diff / 60;
                     total += hours;
-                    cell.textContent = hours + " HOURS";
+                    cell.textContent = hours;
                 });
-                document.getElementById("totalHours").textContent =
-                    total + " HOURS";
+                document.getElementById("totalHours").textContent = total;
             }
 
             function formatDateUS(d) {
@@ -644,14 +1101,16 @@
                 );
             }
 
-            function formatTimeRange(timeVal) {
-                const [h, m] = timeVal.split(":").map(Number);
-                const fmtStart = "5:00";
-                const fmtEnd =
-                    String(h).padStart(2, "0") +
-                    ":" +
-                    String(m).padStart(2, "0");
-                return fmtStart + "-" + fmtEnd;
+            function to12hr(h, m) {
+                const ap = h >= 12 ? "PM" : "AM";
+                let h12 = h % 12;
+                if (h12 === 0) h12 = 12;
+                return h12 + ":" + String(m).padStart(2, "0") + " " + ap;
+            }
+
+            function formatTimeRange(h24, m) {
+                const otStart = getOTStart();
+                return to12hr(otStart.h, otStart.m) + "-" + to12hr(h24, m);
             }
 
             function generateImage() {
@@ -659,19 +1118,18 @@
                 const position =
                     document.getElementById("empPosition").value || "Position";
 
+                const otStart = getOTStart();
                 const rows = [];
                 document.querySelectorAll("#entryBody tr").forEach((tr) => {
-                    const timeInput = tr.querySelector(".end-time");
-                    if (!timeInput.value) return;
-                    const [h, m] = timeInput.value.split(":").map(Number);
-                    const diff = h * 60 + m - OT_START_HOUR * 60;
+                    const { h, m } = getEndTime24(tr);
+                    const diff = h * 60 + m - (otStart.h * 60 + otStart.m);
                     if (diff <= 0) return;
                     const date = tr.children[0].textContent;
                     const hours = diff / 60;
                     const notes = tr.querySelector(".notes-input").value;
                     rows.push({
                         date,
-                        time: formatTimeRange(timeInput.value),
+                        time: formatTimeRange(h, m),
                         hours,
                         notes,
                     });
@@ -713,6 +1171,7 @@
 
                     // Download as Image
                     document.getElementById("btnDownloadImg").onclick = () => {
+                        saveToHistory();
                         const link = document.createElement("a");
                         link.download = "overtime-record.png";
                         link.href = dataUrl;
@@ -724,6 +1183,7 @@
 
                     // Download as PDF (A4)
                     document.getElementById("btnDownloadPdf").onclick = () => {
+                        saveToHistory();
                         const { jsPDF } = window.jspdf;
                         const pdf = new jsPDF("p", "mm", "a4");
                         const pageWidth = pdf.internal.pageSize.getWidth();
@@ -775,6 +1235,138 @@
                 d.textContent = str;
                 return d.innerHTML;
             }
+
+            // ---- History ----
+            function getHistory() {
+                try {
+                    return JSON.parse(
+                        localStorage.getItem("overtimeHistory") || "[]",
+                    );
+                } catch {
+                    return [];
+                }
+            }
+
+            function saveToHistory() {
+                const name = getEmployeeName() || "Unknown";
+                const position =
+                    document.getElementById("empPosition").value || "";
+                const otStart = getOTStart();
+                const entryRows = [];
+                document.querySelectorAll("#entryBody tr").forEach((tr) => {
+                    entryRows.push({
+                        date: tr.children[0].textContent,
+                        hour: tr.querySelector(".time-hour").value,
+                        minute: tr.querySelector(".time-minute").value,
+                        ampm: tr.querySelector(".time-ampm").value,
+                        notes: tr.querySelector(".notes-input").value,
+                    });
+                });
+                const totalHours =
+                    parseFloat(
+                        document.getElementById("totalHours").textContent,
+                    ) || 0;
+                const record = {
+                    id: Date.now(),
+                    savedAt: new Date().toLocaleString(),
+                    name,
+                    position,
+                    totalHours,
+                    toHour: document.getElementById("toHour").value,
+                    toMinute: document.getElementById("toMinute").value,
+                    toAmpm: document.getElementById("toAmpm").value,
+                    startDate: document.getElementById("startDate").value,
+                    endDate: document.getElementById("endDate").value,
+                    excludeSundays:
+                        document.getElementById("excludeSundays").checked,
+                    rows: entryRows,
+                };
+                const history = getHistory();
+                history.unshift(record);
+                localStorage.setItem(
+                    "overtimeHistory",
+                    JSON.stringify(history),
+                );
+                renderHistory();
+            }
+
+            async function deleteFromHistory(id) {
+                if (!(await showConfirm("Delete this record from history?"))) return;
+                const history = getHistory().filter((r) => r.id !== id);
+                localStorage.setItem(
+                    "overtimeHistory",
+                    JSON.stringify(history),
+                );
+                renderHistory();
+            }
+
+            function loadFromHistory(id) {
+                const record = getHistory().find((r) => r.id === id);
+                if (!record) return;
+                // Fill employee info
+                const isKnown = Object.keys(employeeData).includes(record.name);
+                if (isKnown) {
+                    empNameSelect.value = record.name;
+                    empNameCustom.classList.remove("visible");
+                    empNameCustom.value = "";
+                } else {
+                    empNameSelect.value = "__custom__";
+                    empNameCustom.classList.add("visible");
+                    empNameCustom.value = record.name;
+                }
+                empPosition.value = record.position || "";
+                document.getElementById("startDate").value =
+                    record.startDate || "";
+                document.getElementById("endDate").value = record.endDate || "";
+                document.getElementById("excludeSundays").checked =
+                    !!record.excludeSundays;
+                if (record.toHour)
+                    document.getElementById("toHour").value = record.toHour;
+                if (record.toMinute)
+                    document.getElementById("toMinute").value = record.toMinute;
+                if (record.toAmpm)
+                    document.getElementById("toAmpm").value = record.toAmpm;
+
+                // Rebuild rows
+                const tbody = document.getElementById("entryBody");
+                tbody.innerHTML = "";
+                (record.rows || []).forEach((r) => addRow(tbody, r.date, r));
+                recalcAll();
+                saveDraft();
+                document.getElementById("entrySection").style.display = "block";
+                document.getElementById("actionsSection").style.display =
+                    "block";
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+
+            function renderHistory() {
+                const history = getHistory();
+                const section = document.getElementById("historySection");
+                const list = document.getElementById("historyList");
+                if (history.length === 0) {
+                    section.style.display = "none";
+                    return;
+                }
+                section.style.display = "block";
+                list.innerHTML = history
+                    .map(
+                        (r) => `
+                    <li class="history-item">
+                        <div class="history-item-info">
+                            <div class="history-item-name">${escHtml(r.name)}</div>
+                            <div class="history-item-meta">${escHtml(r.savedAt)} &middot; ${r.totalHours} Hours &middot; ${r.rows ? r.rows.length : 0} entries</div>
+                        </div>
+                        <div class="history-item-actions">
+                            <button onclick="loadFromHistory(${r.id})">Load</button>
+                            <button class="cancel" onclick="deleteFromHistory(${r.id})">Delete</button>
+                        </div>
+                    </li>
+                `,
+                    )
+                    .join("");
+            }
+
+            renderHistory();
 
             // Register service worker
             if ("serviceWorker" in navigator) {

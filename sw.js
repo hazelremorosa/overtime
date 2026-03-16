@@ -1,4 +1,4 @@
-const CACHE_NAME = "ot-record-v1";
+const CACHE_NAME = "ot-record-v2";
 const ASSETS = [
     "./index.html",
     "./manifest.json",
@@ -6,6 +6,7 @@ const ASSETS = [
     "./icon-512.svg",
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
     "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
 ];
 
 self.addEventListener("install", (e) => {
